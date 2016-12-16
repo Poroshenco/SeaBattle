@@ -23,6 +23,75 @@ namespace SeaBatlle
             return type == CellType.Destroyed || type == CellType.Missed;
         }
 
+        public static bool IsKilled(this CellType[,] field, int MAP_SIZE)
+        {
+            int count = 0;
+            bool found = false;
+
+            for (int y = 0; y < MAP_SIZE; y++)
+            {
+                for (int x = 0; x < MAP_SIZE; x++)
+                {
+                    if (field[x, y] == CellType.Destroyed)
+                    {
+                        count++;
+
+                        if (IsKilled_FindShip(x, y, field, MAP_SIZE))
+                            found = true;
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                for (int y = 0; y < MAP_SIZE; y++)
+                {
+                    for (int x = 0; x < MAP_SIZE; x++)
+                    {
+                        if (field[x, y] == CellType.Destroyed)
+                        {
+                            for (int dy = -1; dy < 2; dy++)
+                            {
+                                for (int dx = -1; dx < 2; dx++)
+                                {
+                                    int _x = x + dx;
+                                    int _y = y + dy;
+
+                                    if (_x < 0 || _x > MAP_SIZE - 1 || _y < 0 || _y > MAP_SIZE - 1)
+                                        continue;
+
+                                    if (field[_x, _y] != CellType.Destroyed)
+                                        field[_x, _y] = CellType.Missed;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return true; // Если кораблик убили, возвращаем true
+            }
+
+            return false; // Если кораблик не убили, то возвращаем false
+        }
+
+        private static bool IsKilled_FindShip(int x, int y, CellType[,] field, int MAP_SIZE) // Проверяем каждую клетку, если вокруг неё есть кораблик, возращаем true
+        {
+            if (x > 0)
+                if (field[x - 1, y] == CellType.Ship)
+                    return true;
+            if (x < MAP_SIZE - 1)
+                if (field[x + 1, y] == CellType.Ship)
+                    return true;
+            if (y > 0)
+                if (field[x, y - 1] == CellType.Ship)
+                    return true;
+            if (y < MAP_SIZE - 1)
+                if (field[x, y + 1] == CellType.Ship)
+                    return true;
+
+            return false;
+        }
+
         public static SolidBrush GetColor(this CellType type)
         {
             switch (type)

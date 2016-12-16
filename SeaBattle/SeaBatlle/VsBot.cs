@@ -123,9 +123,10 @@ namespace SeaBatlle
                 if (!__BotField[x, y].Shooted())
                     __BotField[x, y] = __BotField[x, y].CheckCell();
 
-                IsKilled(__BotField); // Проверяем убили ли кораблик
+                __BotField.IsKilled(MAP_SIZE); // Проверяем убили ли кораблик
 
                 BotDraw();
+
                 Task.Delay(200).Wait();
                 Bot();
             }
@@ -155,7 +156,7 @@ namespace SeaBatlle
                         MyTurn = true;
 
                     if (__MyField[x, y] == CellType.Destroyed)
-                        if (!IsKilled(__MyField))
+                        if (!__MyField.IsKilled(MAP_SIZE))
                         {
                             hited = true;
                             hitedX = x;
@@ -169,7 +170,7 @@ namespace SeaBatlle
                     int tempX = hitedX;
                     int tempY = hitedY;
 
-                    while (dX == 0 && dY == 0) // Если сторона в которую двигается бот не выбрана
+                    while (dX == 0 && dY == 0) // Если сторона в которую стреляет бот не выбрана
                     {
                         if (rotate == 0 && tempY > 0)
                             dY = -1;
@@ -180,7 +181,7 @@ namespace SeaBatlle
                         if (rotate == 3 && tempX > 0)
                             dX = -1;
 
-                        if (!__MyField[tempX + dX, tempY + dY].Shooted()) // Если по этой стороне не стреляли, 
+                        if (!__MyField[tempX + dX, tempY + dY].Shooted()) // Если в эту сторону не стреляли, то смотрим, попал бот или нет ниже
                         {
                             tempX += dX;
                             tempY += dY;
@@ -202,7 +203,7 @@ namespace SeaBatlle
                         break;
                     }
 
-                    while (!IsKilled(__MyField) && (dX != 0 || dY != 0)) // Если не убили, и выбрана сторона движения, то идем в тело
+                    while (!__MyField.IsKilled(MAP_SIZE) && (dX != 0 || dY != 0)) // Если не убили, и выбрана сторона движения, то идем в тело
                     {
                         tempX += dX; // Добавляем к координатам дельту (в какую сторону двигаемся)
                         tempY += dY;
@@ -226,7 +227,7 @@ namespace SeaBatlle
                         MyDraw(); //Отрисовываем каждый ход
                     }
 
-                    if (IsKilled(__MyField)) // Если убили, то обнуляем наши дельты, и так же меняем бул переменную, на то что бы кораблик заново выбирал рандомную точку
+                    if (__MyField.IsKilled(MAP_SIZE)) // Если убили, то обнуляем наши дельты, и так же меняем бул переменную, на то что бы кораблик заново выбирал рандомную точку
                     {
                         hited = false;
                         dX = 0;
@@ -234,86 +235,17 @@ namespace SeaBatlle
                     }
                 }
 
-                Task.Delay(400).Wait();
+                Task.Delay(200).Wait();
             }
             MyDraw();
         }
 
-        public void ChangeMove(ref int X, ref int Y) //Говнокод
+        public void ChangeMove(ref int X, ref int Y) // Меняем сторону в которую стреляет бот
         {
             dX = -dX;
             dY = -dY;
-            X = hitedX; 
+            X = hitedX; // А так же обновляем точку в которую попал бот, что бы снова стрелять относительно неё
             Y = hitedY;
-        }
-
-        private bool IsKilled(CellType[,] field) //Говнокод
-        {
-            int count = 0;
-            bool found = false;
-
-            for (int y = 0; y < MAP_SIZE; y++)
-            {
-                for (int x = 0; x < MAP_SIZE; x++)
-                {
-                    if (field[x, y] == CellType.Destroyed)
-                    {
-                        count++; //Говнокод
-
-                        if (IsKilled_FindShip(x, y, field))
-                            found = true;
-                    }
-                }
-            }
-
-            if (!found)
-            {
-                for (int y = 0; y < MAP_SIZE; y++)
-                {
-                    for (int x = 0; x < MAP_SIZE; x++)
-                    {
-                        if (field[x, y] == CellType.Destroyed)
-                        {
-                            for (int dy = -1; dy < 2; dy++)
-                            {
-                                for (int dx = -1; dx < 2; dx++)
-                                {
-                                    int _x = x + dx;
-                                    int _y = y + dy;
-
-                                    if (_x < 0 || _x > MAP_SIZE - 1 || _y < 0 || _y > MAP_SIZE - 1)
-                                        continue;
-
-                                    if (field[_x, _y] != CellType.Destroyed)
-                                        field[_x, _y] = CellType.Missed;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool IsKilled_FindShip(int x, int y, CellType[,] field) //Говнокод
-        {
-            if (x > 0)
-                if (field[x - 1, y] == CellType.Ship)
-                    return true;
-            if (x < MAP_SIZE - 1)
-                if (field[x + 1, y] == CellType.Ship)
-                    return true;
-            if (y > 0)
-                if (field[x, y - 1] == CellType.Ship)
-                    return true;
-            if (y < MAP_SIZE - 1)
-                if (field[x, y + 1] == CellType.Ship)
-                    return true;
-
-            return false;
         }
     }
 }
