@@ -88,6 +88,7 @@
             this.VsBot.TabIndex = 4;
             this.VsBot.Text = "PvE";
             this.VsBot.UseVisualStyleBackColor = true;
+            this.VsBot.Click += new System.EventHandler(this.VsBot_Click);
             // 
             // Next
             // 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SeaBatlle
 {
-    class Ship
+    public class Ship
     {
         public ShipType Type { get; set; }
 

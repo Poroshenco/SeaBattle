@@ -56,6 +56,7 @@
             this.Next.TabIndex = 1;
             this.Next.Text = "Next";
             this.Next.UseVisualStyleBackColor = true;
+            this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
             // AutoBuild
             // 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,10 +31,11 @@ namespace SeaBatlle
             CELL_SIZE = 300 / __Map.Size;
             this.KeyPreview = true;
 
+
             Draw();
         }
 
-        public void Draw()
+        private void Draw()
         {
             Bitmap bmp = new Bitmap(Picture.Width, Picture.Height);
 
@@ -84,6 +86,7 @@ namespace SeaBatlle
 
                 int tempX = drawX;
                 int tempY = drawY;
+
                 for (int i = 0; i < count; i++)
                 {
                     graph.FillRectangle(brush, tempX, tempY, CELL_SIZE, CELL_SIZE);
@@ -101,24 +104,22 @@ namespace SeaBatlle
 
         private void AutoBuild_Click(object sender, EventArgs e)
         {
-            Refresh();
             __Map = Map.BuildMap(MAP_SIZE);
 
+            ButtonNextEnable();
             Draw();
         }
 
         public SolidBrush GetColor(int y)
         {
-            var type = ShipTypeExtention.GetTypeOfShip(y);
+            ShipType type = ShipTypeExtention.GetTypeOfShip(y);
 
-            var count = type.GetCountForType();
+            int amount = __Map.GetAmountForShipType(type);
 
             if (ShipDrawType == type && DrawShip)
-                count--;
+                amount--;
 
-            var freeShips = count - __Map.CountOfShips(type);
-
-            if (freeShips <= 0)
+            if (amount <= 0)
                 return new SolidBrush(Color.White);
 
             return type.GetColor();
@@ -161,16 +162,46 @@ namespace SeaBatlle
                 Rotate = !Rotate;
             }
 
-
-
             Draw();
         }
 
         private void Clean_Click(object sender, EventArgs e)
         {
             __Map = new Map(MAP_SIZE);
-            Refresh();
+
+            ButtonNextEnable();
             Draw();
+        }
+
+        private bool CheckForEnableButtonNext()
+        {
+            foreach (ShipType shipType in Enum.GetValues(typeof(ShipType)))
+            {
+                if (__Map.GetAmountForShipType(shipType) > 0)
+                    return false;
+            }
+            return true;
+        }
+
+        private void ButtonNextEnable()
+        {
+            if (CheckForEnableButtonNext())
+                Next.Enabled = true;
+            else
+            {
+                Next.Enabled = false;
+            }
+        }
+
+        private void Next_Click(object sender, EventArgs e)
+        {
+            if (Login.BotEnable)
+            {
+                VsBot bot = new VsBot(__Map);
+
+                this.Hide();
+                bot.Show();
+            }
         }
 
         private bool OnMap(int x, int y)
@@ -182,21 +213,21 @@ namespace SeaBatlle
         {
             int j = 4;
 
-            int i = 0;
-            int k = 0;
-
+            int i;
+            int k;
+            
             bool found = false;
             for (i = 0; i < 4; i++)
             {
                 for (k = 0; k < j; k++)
                 {
-                    int _Y = 40 + Convert.ToInt32(CELL_SIZE * i * 2.5);
-                    int _X = 360 + k * CELL_SIZE;
+                    int y = 40 + Convert.ToInt32(CELL_SIZE * i * 2.5);
+                    int x = 360 + k * CELL_SIZE;
 
-                    if (e.X >= _X && e.X <= _X + CELL_SIZE && e.Y >= _Y && e.Y <= CELL_SIZE + _Y)
+                    if (e.X >= x && e.X <= x + CELL_SIZE && e.Y >= y && e.Y <= CELL_SIZE + y)
                     {
-                        dx = e.X - _X + CELL_SIZE * k;
-                        dy = e.Y - _Y;
+                        dx = e.X - x + CELL_SIZE * k;
+                        dy = e.Y - y;
                         found = true;
                         break;
                     }
@@ -211,7 +242,7 @@ namespace SeaBatlle
             {
                 ShipDrawType = ShipTypeExtention.GetTypeOfShip(i);
 
-                if (GetColor(i)!=new SolidBrush(Color.White))
+                if (__Map.GetAmountForShipType(ShipDrawType) > 0)
                 {
                     if (found)
                     {
@@ -228,7 +259,7 @@ namespace SeaBatlle
 
             if (MouseButtons.Right == e.Button)
             {
-                if (OnMap(drawX, drawY))
+                if (OnMap(e.X, e.Y))
                 {
                     int x = (e.X - 30) / CELL_SIZE;
                     int y = (e.Y - 30) / CELL_SIZE;
@@ -238,6 +269,7 @@ namespace SeaBatlle
                     Draw();
                 }
             }
+            ButtonNextEnable();
         }
 
         private void Picture_MouseUp(object sender, MouseEventArgs e)
@@ -255,6 +287,7 @@ namespace SeaBatlle
                 DrawShip = false;
             }
 
+            ButtonNextEnable();
             Draw();
         }
     }

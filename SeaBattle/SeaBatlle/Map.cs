@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SeaBatlle
 {
-    class Map
+    public class Map
     {
         public int Size { get; }
 
@@ -27,18 +27,37 @@ namespace SeaBatlle
             Ships = new List<Ship>();
         }
 
+        public CellType[,] FillCells()
+        {
+            CellType[,] field = new CellType[Size, Size];
+
+            for (int y = 0; y < Size; y++)
+            {
+                for (int x = 0; x < Size; x++)
+                {
+                    if (Cells[x, y].Type == CellType.Ship)
+                        field[x,y] = CellType.Ship;
+                }
+            }
+
+            return field;
+        }
+
         public bool DeleteShip(int x, int y)
         {
-            var cell = Cells[x, y];
-            var ship = cell.Ship;
+            MapCell cell = Cells[x, y];
+            Ship ship = cell.Ship;
 
             if (ship == null)
                 return false;
 
             Ships.Remove(ship);
 
-            foreach (var point in ship.Points)
+            foreach (Point point in ship.Points)
+            {
                 Cells[point.X, point.Y].Ship = null;
+                Cells[point.X,point.Y].Type = CellType.None;
+            }
 
             return true;
         }
@@ -78,6 +97,15 @@ namespace SeaBatlle
             return true;
         }
 
+        public int GetAmountForShipType(ShipType type)
+        {
+            int count = type.GetCountForType();
+
+            int freeShips = count - CountOfShips(type);
+
+            return freeShips;
+        }
+
         public int CountOfShips(ShipType type)
         {
             return Ships.Count(e => e.Type == type);
@@ -110,6 +138,7 @@ namespace SeaBatlle
             foreach (var point in shipPoints)
             {
                 MapCell cell = Cells[point.X, point.Y];
+                Cells[point.X,point.Y].Type = CellType.Ship;
 
                 cell.Ship = ship;
             }

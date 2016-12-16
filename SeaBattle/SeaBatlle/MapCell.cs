@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeaBatlle
 {
-    class MapCell
+    public class MapCell
     {
         public CellType Type { get; set; }
 

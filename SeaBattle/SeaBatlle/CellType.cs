@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +13,7 @@ namespace SeaBatlle
         None,
         Ship,
         Destroyed,
-        Missed,
-        Temp
+        Missed
     }
 
     public static class CellExtention
@@ -30,12 +30,26 @@ namespace SeaBatlle
                 case CellType.Ship:
                     return new SolidBrush(Color.Black);
                 case CellType.Destroyed:
-                    return new SolidBrush(Color.Blue);
+                    return new SolidBrush(Color.Brown);
                 case CellType.Missed:
-                    return new SolidBrush(Color.Yellow);
+                    return new SolidBrush(Color.DarkBlue);
                 default:
                     return new SolidBrush(Color.White);
             }
         }
+
+        public static CellType CheckCell(this CellType type)
+        {
+            switch (type)
+            {
+                case CellType.Ship:
+                    return CellType.Destroyed;
+                case CellType.None:
+                    return CellType.Missed;
+                default:
+                    return type;
+            }
+        }
+
     }
 }

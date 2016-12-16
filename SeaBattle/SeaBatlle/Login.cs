@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,10 @@ namespace SeaBatlle
     public partial class Login : Form
     {
         private readonly List<string> nicknames;
+
+        public static bool BotEnable = true;
+        public static bool OnLanEnable;
+        public static bool PvPEnable;
 
         public Login()
         {
@@ -32,7 +37,7 @@ namespace SeaBatlle
         private void RAND_Click(object sender, EventArgs e)
         {
             Random rand = new Random();
-            Nickname.Text = nicknames[rand.Next(0,nicknames.Count)];
+            Nickname.Text = nicknames[rand.Next(0, nicknames.Count)];
         }
 
         private void Lan_Click(object sender, EventArgs e)
@@ -42,13 +47,21 @@ namespace SeaBatlle
 
         private void Next_Click(object sender, EventArgs e)
         {
-            if (Nickname.Text != "" && Nickname.Text.IndexOf(" ") == -1)
+            if ((Nickname.Text != "" && Nickname.Text.IndexOf(" ") == -1) || BotEnable)
             {
                 Build build = new Build();
 
                 this.Hide();
                 build.Show();
             }
+        }
+
+        private void VsBot_Click(object sender, EventArgs e)
+        {
+            BotEnable = true;
+            PvPEnable = false;
+            OnLanEnable = false;
+            Next.Enabled = true;
         }
     }
 }
