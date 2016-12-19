@@ -22,39 +22,7 @@ namespace SeaBatlle
         {
             return type == CellType.Destroyed || type == CellType.Missed;
         }
-
-        public static Bitmap DrawMap(this CellType[,] field, bool show_ships)
-        {
-            Bitmap bmp = new Bitmap(300, 300);
-            Graphics graph = Graphics.FromImage(bmp);
-
-            int MAP_SIZE = Login.MAP_SIZE;
-            int CELL = 300 / MAP_SIZE;
-            Pen pen = new Pen(Color.Black);
-
-            for (int y = 0; y < MAP_SIZE; y++)
-            {
-                for (int x = 0; x < MAP_SIZE; x++)
-                {
-                    if (field[x, y] != CellType.Ship || show_ships)
-                    {
-                        SolidBrush brush = field[x, y].GetColor();
-                        graph.FillRectangle(brush, x*CELL, y*CELL, CELL, CELL);
-                    }
-                }
-            }
-
-            for (int i = 0; i <= MAP_SIZE; i++)
-            {
-                graph.DrawLine(pen, i * CELL, 0, i * CELL, MAP_SIZE * CELL);
-                graph.DrawLine(pen, 0, i * CELL, MAP_SIZE * CELL, i * CELL);
-            }
-
-            graph.DrawRectangle(pen, 0, 0, 299, 299);
-
-            return bmp;
-        }
-
+        
         public static bool IsKilled(this CellType[,] field)
         {
             int count = 0;

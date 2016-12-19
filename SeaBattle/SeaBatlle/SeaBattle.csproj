@@ -53,6 +53,7 @@
       <DependentUpon>Build.cs</DependentUpon>
     </Compile>
     <Compile Include="CellType.cs" />
+    <Compile Include="Draw.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>

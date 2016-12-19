@@ -40,6 +40,7 @@ namespace SeaBatlle
             dY = 0;
 
             MyTurn = rand.Next(0, 2) == 0;
+            Walketh.Image = Draw.Arrow(MyTurn);
 
             MAP_SIZE = map.Size;
             CELL = 300 / MAP_SIZE;
@@ -57,6 +58,8 @@ namespace SeaBatlle
         
         private void BotField_MouseDown(object sender, MouseEventArgs e)
         {
+            Walketh.Image = Draw.Arrow(!MyTurn);
+
             if (MyTurn)
             {
                 int x = e.X / CELL;
@@ -72,6 +75,7 @@ namespace SeaBatlle
 
                 BotField.Image = __BotField.DrawMap(false);
 
+                Walketh.Image = Draw.Arrow(!MyTurn);
                 Task.Delay(200).Wait();
                 Bot();
             }
@@ -81,6 +85,8 @@ namespace SeaBatlle
         {
             while (!MyTurn)
             {
+                Walketh.Image = Draw.Arrow(!MyTurn);
+
                 if (!hited)
                 {
                     int x = rand.Next(0, MAP_SIZE);
@@ -182,6 +188,8 @@ namespace SeaBatlle
 
                 Task.Delay(200).Wait();
             }
+
+            Walketh.Image = Draw.Arrow(!MyTurn);
             MyField.Image = __MyField.DrawMap(true);
         }
 

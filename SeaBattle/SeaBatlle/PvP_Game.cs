@@ -12,10 +12,10 @@ namespace SeaBatlle
 {
     public partial class PvP_Game : Form
     {
-        private CellType[,] FirstPlayerField;
-        private CellType[,] SecondPlayerField;
+        private CellType[,] __FirstPlayerField;
+        private CellType[,] __SecondPlayerField;
 
-        private bool FirstPlayerTurn;
+        private bool __FirstPlayerTurn;
         private int CELL;
 
         public PvP_Game(CellType[,] map_1, CellType[,] map_2)
@@ -23,51 +23,64 @@ namespace SeaBatlle
             InitializeComponent();
 
             Random rand = new Random();
-            FirstPlayerTurn = rand.Next(0, 2) == 0;
+            __FirstPlayerTurn = rand.Next(0, 2) == 0;
+
+            Walketh.Image = Draw.Arrow(__FirstPlayerTurn);
+
             CELL = 300 / Login.MAP_SIZE;
 
-            FirstPlayerField = map_1;
-            SecondPlayerField = map_2;
+            __FirstPlayerField = map_1;
+            __SecondPlayerField = map_2;
 
             FirstNickname.Text = PvP_EnterNicknames.FirstPlayerNickname + " field:";
             SecondNickname.Text = PvP_EnterNicknames.SecondPlayerNickname + " field:";
 
-            FirstPlayerPicture.Image = FirstPlayerField.DrawMap(false);
-            SecondPlayerPicture.Image = SecondPlayerField.DrawMap(false);
+            FirstPlayerPicture.Image = __FirstPlayerField.DrawMap(false);
+            SecondPlayerPicture.Image = __SecondPlayerField.DrawMap(false);
         }
 
         private void FirstPlayerPicture_MouseDown(object sender, MouseEventArgs e)
         {
-            if (FirstPlayerTurn)
-            {
-                int x = e.X/CELL;
-                int y = e.Y/CELL;
-
-                FirstPlayerField[x, y] = FirstPlayerField[x, y].CheckCell();
-
-                if (FirstPlayerField[x, y] == CellType.Missed)
-                    FirstPlayerTurn = false;
-
-                FirstPlayerField.IsKilled();
-                FirstPlayerPicture.Image = FirstPlayerField.DrawMap(false);
-            }
-        }
-
-        private void SecondPlayerPicture_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (!FirstPlayerTurn)
+            if (__FirstPlayerTurn)
             {
                 int x = e.X / CELL;
                 int y = e.Y / CELL;
 
-                SecondPlayerField[x, y] = SecondPlayerField[x, y].CheckCell();
+                if (!__FirstPlayerField[x, y].Shooted())
+                {
+                    __FirstPlayerField[x, y] = __FirstPlayerField[x, y].CheckCell();
 
-                if (SecondPlayerField[x, y] == CellType.Missed)
-                    FirstPlayerTurn = true;
+                    if (__FirstPlayerField[x, y] == CellType.Missed)
+                        __FirstPlayerTurn = false;
 
-                SecondPlayerField.IsKilled();
-                SecondPlayerPicture.Image = SecondPlayerField.DrawMap(false);
+                    __FirstPlayerField.IsKilled();
+                    FirstPlayerPicture.Image = __FirstPlayerField.DrawMap(false);
+                }
             }
+
+            Walketh.Image = Draw.Arrow(__FirstPlayerTurn);
+        }
+
+        private void SecondPlayerPicture_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!__FirstPlayerTurn)
+            {
+                int x = e.X / CELL;
+                int y = e.Y / CELL;
+
+                if (!__SecondPlayerField[x, y].Shooted())
+                {
+                    __SecondPlayerField[x, y] = __SecondPlayerField[x, y].CheckCell();
+
+                    if (__SecondPlayerField[x, y] == CellType.Missed)
+                        __FirstPlayerTurn = true;
+
+                    __SecondPlayerField.IsKilled();
+                    SecondPlayerPicture.Image = __SecondPlayerField.DrawMap(false);
+                }
+            }
+
+            Walketh.Image = Draw.Arrow(__FirstPlayerTurn);
         }
     }
 }

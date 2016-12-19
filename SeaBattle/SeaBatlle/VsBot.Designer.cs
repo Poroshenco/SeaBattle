@@ -30,11 +30,11 @@
         {
             this.MyField = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Walketh = new System.Windows.Forms.PictureBox();
             this.BotField = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.MyField)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Walketh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BotField)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,13 +56,13 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Your field:";
             // 
-            // pictureBox2
+            // Walketh
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(326, 165);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(86, 50);
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
+            this.Walketh.Location = new System.Drawing.Point(326, 165);
+            this.Walketh.Name = "Walketh";
+            this.Walketh.Size = new System.Drawing.Size(86, 50);
+            this.Walketh.TabIndex = 5;
+            this.Walketh.TabStop = false;
             // 
             // BotField
             // 
@@ -90,13 +90,13 @@
             this.ClientSize = new System.Drawing.Size(729, 353);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.BotField);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.Walketh);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.MyField);
             this.Name = "VsBot";
             this.Text = "VsBot";
             ((System.ComponentModel.ISupportInitialize)(this.MyField)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Walketh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BotField)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -107,7 +107,7 @@
 
         private System.Windows.Forms.PictureBox MyField;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox Walketh;
         private System.Windows.Forms.PictureBox BotField;
         private System.Windows.Forms.Label label2;
     }

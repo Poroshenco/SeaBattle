@@ -31,11 +31,11 @@
             this.FirstPlayerPicture = new System.Windows.Forms.PictureBox();
             this.SecondPlayerPicture = new System.Windows.Forms.PictureBox();
             this.FirstNickname = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Walketh = new System.Windows.Forms.PictureBox();
             this.SecondNickname = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.FirstPlayerPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecondPlayerPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Walketh)).BeginInit();
             this.SuspendLayout();
             // 
             // FirstPlayerPicture
@@ -66,13 +66,13 @@
             this.FirstNickname.TabIndex = 3;
             this.FirstNickname.Text = "Nickname1 field:";
             // 
-            // pictureBox2
+            // Walketh
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(326, 165);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(86, 50);
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
+            this.Walketh.Location = new System.Drawing.Point(326, 165);
+            this.Walketh.Name = "Walketh";
+            this.Walketh.Size = new System.Drawing.Size(86, 50);
+            this.Walketh.TabIndex = 6;
+            this.Walketh.TabStop = false;
             // 
             // SecondNickname
             // 
@@ -90,7 +90,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(734, 349);
             this.Controls.Add(this.SecondNickname);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.Walketh);
             this.Controls.Add(this.FirstNickname);
             this.Controls.Add(this.SecondPlayerPicture);
             this.Controls.Add(this.FirstPlayerPicture);
@@ -98,7 +98,7 @@
             this.Text = "PvP_Game";
             ((System.ComponentModel.ISupportInitialize)(this.FirstPlayerPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecondPlayerPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Walketh)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,7 +109,7 @@
         private System.Windows.Forms.PictureBox FirstPlayerPicture;
         private System.Windows.Forms.PictureBox SecondPlayerPicture;
         private System.Windows.Forms.Label FirstNickname;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox Walketh;
         private System.Windows.Forms.Label SecondNickname;
     }
 }
