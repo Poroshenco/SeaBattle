@@ -56,13 +56,13 @@ namespace SeaBatlle
             switch (type)
             {
                 case ShipType.Esminec:
-                    return 4;
+                    return Login.Esmineces;
                 case ShipType.Cruiser:
-                    return 3;
+                    return Login.Cruisers;
                 case ShipType.AirCarrier:
-                    return 2;
+                    return Login.AirCrafters;
                 case ShipType.Linkor:
-                    return 1;
+                    return Login.Linkors;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type));
             }

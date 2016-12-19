@@ -50,68 +50,13 @@ namespace SeaBatlle
             __BotField = bot.FillCells();
 
             Bot();
-            MyDraw();
-            BotDraw();
+
+            MyField.Image = __MyField.DrawMap(true);
+            BotField.Image = __BotField.DrawMap(false);
         }
-
-        private void MyDraw()
-        {
-            Bitmap bmp = new Bitmap(300, 300);
-
-            Graphics graph = Graphics.FromImage(bmp);
-
-            for (int y = 0; y < MAP_SIZE; y++)
-            {
-                for (int x = 0; x < MAP_SIZE; x++)
-                {
-                    SolidBrush brush = __MyField[x, y].GetColor();
-                    graph.FillRectangle(brush, x * CELL, y * CELL, CELL, CELL);
-                }
-            }
-
-            for (int i = 0; i <= MAP_SIZE; i++)
-            {
-                graph.DrawLine(__pen, i * CELL, 0, i * CELL, MAP_SIZE * CELL);
-                graph.DrawLine(__pen, 0, i * CELL, MAP_SIZE * CELL, i * CELL);
-            }
-
-            graph.DrawRectangle(__pen, 0, 0, 299, 299);
-
-            MyField.Image = bmp;
-        }
-
-        private void BotDraw()
-        {
-            Bitmap bmp = new Bitmap(300, 300);
-
-            Graphics graph = Graphics.FromImage(bmp);
-
-            for (int y = 0; y < MAP_SIZE; y++)
-            {
-                for (int x = 0; x < MAP_SIZE; x++)
-                {
-                    SolidBrush brush = __BotField[x, y].GetColor();
-                    if (__BotField[x, y] != CellType.Ship)
-                        graph.FillRectangle(brush, x * CELL, y * CELL, CELL, CELL);
-                }
-            }
-
-            for (int i = 0; i <= MAP_SIZE; i++)
-            {
-                graph.DrawLine(__pen, i * CELL, 0, i * CELL, MAP_SIZE * CELL);
-                graph.DrawLine(__pen, 0, i * CELL, MAP_SIZE * CELL, i * CELL);
-            }
-
-            graph.DrawRectangle(__pen, 0, 0, 299, 299);
-
-
-            BotField.Image = bmp;
-        }
-
+        
         private void BotField_MouseDown(object sender, MouseEventArgs e)
         {
-            MyDraw();
-
             if (MyTurn)
             {
                 int x = e.X / CELL;
@@ -123,9 +68,9 @@ namespace SeaBatlle
                 if (!__BotField[x, y].Shooted())
                     __BotField[x, y] = __BotField[x, y].CheckCell();
 
-                __BotField.IsKilled(MAP_SIZE); // Проверяем убили ли кораблик
+                __BotField.IsKilled(); // Проверяем убили ли кораблик
 
-                BotDraw();
+                BotField.Image = __BotField.DrawMap(false);
 
                 Task.Delay(200).Wait();
                 Bot();
@@ -156,7 +101,7 @@ namespace SeaBatlle
                         MyTurn = true;
 
                     if (__MyField[x, y] == CellType.Destroyed)
-                        if (!__MyField.IsKilled(MAP_SIZE))
+                        if (!__MyField.IsKilled())
                         {
                             hited = true;
                             hitedX = x;
@@ -203,7 +148,7 @@ namespace SeaBatlle
                         break;
                     }
 
-                    while (!__MyField.IsKilled(MAP_SIZE) && (dX != 0 || dY != 0)) // Если не убили, и выбрана сторона движения, то идем в тело
+                    while (!__MyField.IsKilled() && (dX != 0 || dY != 0)) // Если не убили, и выбрана сторона движения, то идем в тело
                     {
                         tempX += dX; // Добавляем к координатам дельту (в какую сторону двигаемся)
                         tempY += dY;
@@ -224,10 +169,10 @@ namespace SeaBatlle
                             break;
                         }
 
-                        MyDraw(); //Отрисовываем каждый ход
+                        MyField.Image = __MyField.DrawMap(true); //Отрисовываем каждый ход
                     }
 
-                    if (__MyField.IsKilled(MAP_SIZE)) // Если убили, то обнуляем наши дельты, и так же меняем бул переменную, на то что бы кораблик заново выбирал рандомную точку
+                    if (__MyField.IsKilled()) // Если убили, то обнуляем наши дельты, и так же меняем бул переменную, на то что бы кораблик заново выбирал рандомную точку
                     {
                         hited = false;
                         dX = 0;
@@ -237,7 +182,7 @@ namespace SeaBatlle
 
                 Task.Delay(200).Wait();
             }
-            MyDraw();
+            MyField.Image = __MyField.DrawMap(true);
         }
 
         public void ChangeMove(ref int X, ref int Y) // Меняем сторону в которую стреляет бот

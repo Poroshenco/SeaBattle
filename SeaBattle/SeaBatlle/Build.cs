@@ -19,16 +19,22 @@ namespace SeaBatlle
 
         private bool Rotate = true;
         private int dx, dy, drawX, drawY;
-        private Map __Map;
+        private Map __MapTemp;
 
-        private const int MAP_SIZE = 10;
+        private CellType[,] firstplayerfield;
+
+        private int MAP_SIZE = Login.MAP_SIZE;
+        private bool __NextPlayer;
 
         public Build()
         {
             InitializeComponent();
 
-            __Map = new Map(MAP_SIZE);
-            CELL_SIZE = 300 / __Map.Size;
+            __MapTemp = new Map(MAP_SIZE);
+
+            firstplayerfield = new CellType[MAP_SIZE, MAP_SIZE];
+
+            CELL_SIZE = 300 / __MapTemp.Size;
             this.KeyPreview = true;
 
 
@@ -59,11 +65,11 @@ namespace SeaBatlle
                     graph.DrawRectangle(pen, X, Y, CELL_SIZE, CELL_SIZE);
                 }
 
-            for (int x = 0; x < __Map.Size; x++)
+            for (int x = 0; x < __MapTemp.Size; x++)
             {
-                for (int y = 0; y < __Map.Size; y++)
+                for (int y = 0; y < __MapTemp.Size; y++)
                 {
-                    Ship ship = __Map.GetShip(x, y);
+                    Ship ship = __MapTemp.GetShip(x, y);
 
                     var brush = ship == null ?
                         new SolidBrush(Color.White) :
@@ -104,7 +110,7 @@ namespace SeaBatlle
 
         private void AutoBuild_Click(object sender, EventArgs e)
         {
-            __Map = Map.BuildMap(MAP_SIZE);
+            __MapTemp = Map.BuildMap(MAP_SIZE);
 
             ButtonNextEnable();
             Draw();
@@ -114,7 +120,7 @@ namespace SeaBatlle
         {
             ShipType type = ShipTypeExtention.GetTypeOfShip(y);
 
-            int amount = __Map.GetAmountForShipType(type);
+            int amount = __MapTemp.GetAmountForShipType(type);
 
             if (ShipDrawType == type && DrawShip)
                 amount--;
@@ -167,7 +173,7 @@ namespace SeaBatlle
 
         private void Clean_Click(object sender, EventArgs e)
         {
-            __Map = new Map(MAP_SIZE);
+            __MapTemp = new Map(MAP_SIZE);
 
             ButtonNextEnable();
             Draw();
@@ -177,7 +183,7 @@ namespace SeaBatlle
         {
             foreach (ShipType shipType in Enum.GetValues(typeof(ShipType)))
             {
-                if (__Map.GetAmountForShipType(shipType) > 0)
+                if (__MapTemp.GetAmountForShipType(shipType) > 0)
                     return false;
             }
             return true;
@@ -197,16 +203,34 @@ namespace SeaBatlle
         {
             if (Login.BotEnable)
             {
-                VsBot bot = new VsBot(__Map);
+                VsBot bot = new VsBot(__MapTemp);
 
                 this.Hide();
                 bot.Show();
+            }
+
+            if (Login.PvPEnable)
+            {
+                if (__NextPlayer)
+                {
+                    PvP_Game pvp = new PvP_Game(firstplayerfield, __MapTemp.FillCells());
+
+                    this.Hide();
+                    pvp.Show();
+                }
+                if (!__NextPlayer)
+                {
+                    firstplayerfield = __MapTemp.FillCells();
+                    __MapTemp = new Map(MAP_SIZE);
+                    __NextPlayer = true;
+                    Draw();
+                }
             }
         }
 
         private bool OnMap(int x, int y)
         {
-            return x > 15 && x < 315 && y > 15 && y < 315;
+            return x > 30 - CELL_SIZE / 2 && x < 330 - CELL_SIZE / 2 && y > 30 - CELL_SIZE / 2 && y < 330 - CELL_SIZE / 2;
         }
 
         private void Picture_MouseDown(object sender, MouseEventArgs e)
@@ -215,7 +239,7 @@ namespace SeaBatlle
 
             int i;
             int k;
-            
+
             bool found = false;
             for (i = 0; i < 4; i++)
             {
@@ -242,7 +266,7 @@ namespace SeaBatlle
             {
                 ShipDrawType = ShipTypeExtention.GetTypeOfShip(i);
 
-                if (__Map.GetAmountForShipType(ShipDrawType) > 0)
+                if (__MapTemp.GetAmountForShipType(ShipDrawType) > 0)
                 {
                     if (found)
                     {
@@ -259,12 +283,12 @@ namespace SeaBatlle
 
             if (MouseButtons.Right == e.Button)
             {
-                if (OnMap(e.X, e.Y))
+                if (e.X > 30 && e.X < 330 && e.Y > 30 && e.Y < 330)
                 {
                     int x = (e.X - 30) / CELL_SIZE;
                     int y = (e.Y - 30) / CELL_SIZE;
 
-                    __Map.DeleteShip(x, y);
+                    __MapTemp.DeleteShip(x, y);
 
                     Draw();
                 }
@@ -281,7 +305,7 @@ namespace SeaBatlle
                     int x = (drawX - 30 + CELL_SIZE / 2) / CELL_SIZE;
                     int y = (drawY - 30 + CELL_SIZE / 2) / CELL_SIZE;
 
-                    __Map.TryPutShip(new Point(x, y), ShipDrawType, !Rotate);
+                    __MapTemp.TryPutShip(new Point(x, y), ShipDrawType, !Rotate);
                 }
 
                 DrawShip = false;

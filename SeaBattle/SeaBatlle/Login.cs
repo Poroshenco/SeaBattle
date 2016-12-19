@@ -14,54 +14,80 @@ namespace SeaBatlle
 {
     public partial class Login : Form
     {
-        private readonly List<string> nicknames;
+        public static int MAP_SIZE;
+        public static int Linkors;
+        public static int AirCrafters;
+        public static int Cruisers;
+        public static int Esmineces;
 
-        public static bool BotEnable = true;
+        public static bool BotEnable;
         public static bool OnLanEnable;
         public static bool PvPEnable;
 
         public Login()
         {
             InitializeComponent();
+            
+            StreamReader sr = new StreamReader("Settings.txt");
 
-            nicknames = new List<string>();
+            MAP_SIZE = int.Parse(sr.ReadLine());
+            Linkors = int.Parse(sr.ReadLine());
+            AirCrafters = int.Parse(sr.ReadLine());
+            Cruisers = int.Parse(sr.ReadLine());
+            Esmineces = int.Parse(sr.ReadLine());
 
-            using (StreamReader sr = new StreamReader("Nicknames.txt"))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                    nicknames.Add(s);
-            }
+            sr.Close();
         }
-
-        private void RAND_Click(object sender, EventArgs e)
-        {
-            Random rand = new Random();
-            Nickname.Text = nicknames[rand.Next(0, nicknames.Count)];
-        }
-
-        private void Lan_Click(object sender, EventArgs e)
-        {
-            Next.Enabled = true;
-        }
-
-        private void Next_Click(object sender, EventArgs e)
-        {
-            if ((Nickname.Text != "" && Nickname.Text.IndexOf(" ") == -1) || BotEnable)
-            {
-                Build build = new Build();
-
-                this.Hide();
-                build.Show();
-            }
-        }
-
+        
         private void VsBot_Click(object sender, EventArgs e)
         {
             BotEnable = true;
             PvPEnable = false;
             OnLanEnable = false;
-            Next.Enabled = true;
+
+            Build build = new Build();
+            build.Show();
+
+            SaveSettings();
+            this.Hide();
+        }
+
+        private void PVP_Click(object sender, EventArgs e)
+        {
+            BotEnable = false;
+            PvPEnable = true;
+            OnLanEnable = false;
+
+            PvP_EnterNicknames pvp = new PvP_EnterNicknames();
+            pvp.Show();
+            this.Hide();
+        }
+
+        private void Lan_Click(object sender, EventArgs e)
+        {
+            BotEnable = false;
+            PvPEnable = false;
+            OnLanEnable = true;
+            
+
+        }
+
+        private void MapSettings_Click(object sender, EventArgs e)
+        {
+            Map_Settings ms = new Map_Settings();
+
+            ms.Show();
+        }
+
+        private void SaveSettings()
+        {
+            StreamWriter sw = new StreamWriter("Settings.txt");
+            sw.WriteLine(MAP_SIZE);
+            sw.WriteLine(Linkors);
+            sw.WriteLine(AirCrafters);
+            sw.WriteLine(Cruisers);
+            sw.WriteLine(Esmineces);
+            sw.Close();
         }
     }
 }
