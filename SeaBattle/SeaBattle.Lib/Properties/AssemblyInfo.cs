@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("SeaBatlle")]
+[assembly: AssemblyTitle("SeaBattle.Lib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SeaBatlle")]
+[assembly: AssemblyProduct("SeaBattle.Lib")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("c2df8778-175b-4a05-a307-bd70fdc461c9")]
+[assembly: Guid("d6d0b1b2-8797-47b3-81f5-45c5d1d36b85")]
 
 // Version information for an assembly consists of the following four values:
 //

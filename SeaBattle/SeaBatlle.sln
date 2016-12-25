@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattle", "SeaBatlle\SeaBattle.csproj", "{C2DF8778-175B-4A05-A307-BD70FDC461C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattle.Client", "SeaBatlle\SeaBattle.Client.csproj", "{C2DF8778-175B-4A05-A307-BD70FDC461C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattle.Lib", "SeaBattle.Lib\SeaBattle.Lib.csproj", "{D6D0B1B2-8797-47B3-81F5-45C5D1D36B85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C2DF8778-175B-4A05-A307-BD70FDC461C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2DF8778-175B-4A05-A307-BD70FDC461C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2DF8778-175B-4A05-A307-BD70FDC461C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D0B1B2-8797-47B3-81F5-45C5D1D36B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D0B1B2-8797-47B3-81F5-45C5D1D36B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D0B1B2-8797-47B3-81F5-45C5D1D36B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D0B1B2-8797-47B3-81F5-45C5D1D36B85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

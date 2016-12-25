@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +72,18 @@
     </Compile>
     <Compile Include="Map.cs" />
     <Compile Include="MapCell.cs" />
+    <Compile Include="OnLan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OnLan.Designer.cs">
+      <DependentUpon>OnLan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OnLan_Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OnLan_Login.Designer.cs">
+      <DependentUpon>OnLan_Login.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PvP_EnterNicknames.cs">
@@ -99,6 +115,12 @@
     <EmbeddedResource Include="Map_Settings.resx">
       <DependentUpon>Map_Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OnLan.resx">
+      <DependentUpon>OnLan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnLan_Login.resx">
+      <DependentUpon>OnLan_Login.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -129,6 +151,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SeaBattle.Lib\SeaBattle.Lib.csproj">
+      <Project>{d6d0b1b2-8797-47b3-81f5-45c5d1d36b85}</Project>
+      <Name>SeaBattle.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

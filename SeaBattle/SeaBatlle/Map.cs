@@ -2,41 +2,40 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SeaBattle.Lib;
 
 namespace SeaBatlle
 {
     public class Map
     {
+        public Map(int size)
+        {
+            Size = size;
+            Cells = new MapCell[size, size];
+
+            for (var x = 0; x < size; x++)
+                for (var y = 0; y < size; y++)
+                    Cells[x, y] = new MapCell();
+
+            Ships = new List<Ship>();
+        }
+
         public int Size { get; }
 
         public MapCell[,] Cells { get; }
 
         public List<Ship> Ships { get; }
 
-        public Map(int size)
-        {
-            Size = size;
-            Cells = new MapCell[size, size];
-
-            for (int x = 0; x < size; x++)
-                for (int y = 0; y < size; y++)
-                    Cells[x, y] = new MapCell();
-
-            Ships = new List<Ship>();
-        }
-
         public CellType[,] FillCells()
         {
-            CellType[,] field = new CellType[Size, Size];
+            var field = new CellType[Size, Size];
 
-            for (int y = 0; y < Size; y++)
+            for (var y = 0; y < Size; y++)
             {
-                for (int x = 0; x < Size; x++)
+                for (var x = 0; x < Size; x++)
                 {
                     if (Cells[x, y].Type == CellType.Ship)
-                        field[x,y] = CellType.Ship;
+                        field[x, y] = CellType.Ship;
                 }
             }
 
@@ -45,18 +44,18 @@ namespace SeaBatlle
 
         public bool DeleteShip(int x, int y)
         {
-            MapCell cell = Cells[x, y];
-            Ship ship = cell.Ship;
+            var cell = Cells[x, y];
+            var ship = cell.Ship;
 
             if (ship == null)
                 return false;
 
             Ships.Remove(ship);
 
-            foreach (Point point in ship.Points)
+            foreach (var point in ship.Points)
             {
                 Cells[point.X, point.Y].Ship = null;
-                Cells[point.X,point.Y].Type = CellType.None;
+                Cells[point.X, point.Y].Type = CellType.None;
             }
 
             return true;
@@ -64,7 +63,7 @@ namespace SeaBatlle
 
         public Ship GetShip(int x, int y)
         {
-            MapCell cell = Cells[x, y];
+            var cell = Cells[x, y];
 
             return cell.Ship;
         }
@@ -76,9 +75,9 @@ namespace SeaBatlle
                 if (!IsOnMap(point))
                     return false;
 
-                for (int dx = -1; dx < 2; dx++)
+                for (var dx = -1; dx < 2; dx++)
                 {
-                    for (int dy = -1; dy < 2; dy++)
+                    for (var dy = -1; dy < 2; dy++)
                     {
                         var x = point.X + dx;
                         var y = point.Y + dy;
@@ -99,9 +98,9 @@ namespace SeaBatlle
 
         public int GetAmountForShipType(ShipType type)
         {
-            int count = type.GetCountForType();
+            var count = type.GetCountForType();
 
-            int freeShips = count - CountOfShips(type);
+            var freeShips = count - CountOfShips(type);
 
             return freeShips;
         }
@@ -123,10 +122,10 @@ namespace SeaBatlle
 
             var shipSize = type.GetSize();
 
-            Point[] shipPoints = new Point[shipSize];
+            var shipPoints = new Point[shipSize];
 
-            for (int i = 0; i < shipSize; i++)
-                shipPoints[i] = new Point(startPoint.X + dx * i, startPoint.Y + dy * i);
+            for (var i = 0; i < shipSize; i++)
+                shipPoints[i] = new Point(startPoint.X + dx*i, startPoint.Y + dy*i);
 
             var ship = new Ship(type, shipPoints);
 
@@ -137,8 +136,8 @@ namespace SeaBatlle
 
             foreach (var point in shipPoints)
             {
-                MapCell cell = Cells[point.X, point.Y];
-                Cells[point.X,point.Y].Type = CellType.Ship;
+                var cell = Cells[point.X, point.Y];
+                Cells[point.X, point.Y].Type = CellType.Ship;
 
                 cell.Ship = ship;
             }
@@ -148,15 +147,15 @@ namespace SeaBatlle
 
         public static Map BuildMap(int size)
         {
-            Map map = new Map(size);
+            var map = new Map(size);
 
-            Random rand = new Random();
+            var rand = new Random();
 
-            foreach (ShipType shipType in Enum.GetValues(typeof(ShipType)))
+            foreach (ShipType shipType in Enum.GetValues(typeof (ShipType)))
             {
-                int shipCount = shipType.GetCountForType();
+                var shipCount = shipType.GetCountForType();
 
-                for (int i = 0; i < shipCount;)
+                for (var i = 0; i < shipCount;)
                 {
                     var invert = rand.Next(0, 2) == 0;
                     var x = rand.Next(0, size - shipType.GetSize() + 1);

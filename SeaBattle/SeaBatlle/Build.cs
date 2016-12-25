@@ -1,30 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SeaBattle.Lib;
 
 namespace SeaBatlle
 {
     public partial class Build : Form
     {
         private readonly int CELL_SIZE;
-        private bool DrawShip;
-        private ShipType ShipDrawType;
-
-        private bool Rotate = true;
-        private int dx, dy, drawX, drawY;
         private Map __MapTemp;
+        private bool __NextPlayer;
+        private bool DrawShip;
+        private int dx, dy, drawX, drawY;
 
         private CellType[,] firstplayerfield;
 
-        private int MAP_SIZE = Login.MAP_SIZE;
-        private bool __NextPlayer;
+        private readonly int MAP_SIZE = Login.MAP_SIZE;
+
+        private bool Rotate = true;
+        private ShipType ShipDrawType;
 
         public Build()
         {
@@ -34,8 +28,8 @@ namespace SeaBatlle
 
             firstplayerfield = new CellType[MAP_SIZE, MAP_SIZE];
 
-            CELL_SIZE = 300 / __MapTemp.Size;
-            this.KeyPreview = true;
+            CELL_SIZE = 300/__MapTemp.Size;
+            KeyPreview = true;
 
 
             Draw();
@@ -43,57 +37,57 @@ namespace SeaBatlle
 
         private void Draw()
         {
-            Bitmap bmp = new Bitmap(Picture.Width, Picture.Height);
+            var bmp = new Bitmap(Picture.Width, Picture.Height);
 
-            Graphics graph = Graphics.FromImage(bmp);
+            var graph = Graphics.FromImage(bmp);
 
-            Pen pen = new Pen(Color.Black);
+            var pen = new Pen(Color.Black);
 
             graph.Clear(Color.White);
 
             graph.DrawRectangle(pen, 0, 0, 558, 359);
 
 
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4 - i; j++)
+            for (var i = 0; i < 4; i++)
+                for (var j = 0; j < 4 - i; j++)
                 {
-                    int X = 360 + j * CELL_SIZE;
-                    int Y = 40 + Convert.ToInt32(CELL_SIZE * i * 2.5);
+                    var X = 360 + j*CELL_SIZE;
+                    var Y = 40 + Convert.ToInt32(CELL_SIZE*i*2.5);
 
-                    SolidBrush brush = GetColor(i);
+                    var brush = GetColor(i);
                     graph.FillRectangle(brush, X, Y, CELL_SIZE, CELL_SIZE);
                     graph.DrawRectangle(pen, X, Y, CELL_SIZE, CELL_SIZE);
                 }
 
-            for (int x = 0; x < __MapTemp.Size; x++)
+            for (var x = 0; x < __MapTemp.Size; x++)
             {
-                for (int y = 0; y < __MapTemp.Size; y++)
+                for (var y = 0; y < __MapTemp.Size; y++)
                 {
-                    Ship ship = __MapTemp.GetShip(x, y);
+                    var ship = __MapTemp.GetShip(x, y);
 
-                    var brush = ship == null ?
-                        new SolidBrush(Color.White) :
-                        ship.Type.GetColor();
+                    var brush = ship == null
+                        ? new SolidBrush(Color.White)
+                        : ship.Type.GetColor();
 
-                    graph.FillRectangle(brush, x * CELL_SIZE + 30, y * CELL_SIZE + 30, CELL_SIZE, CELL_SIZE);
+                    graph.FillRectangle(brush, x*CELL_SIZE + 30, y*CELL_SIZE + 30, CELL_SIZE, CELL_SIZE);
                 }
             }
 
-            for (int i = 0; i <= MAP_SIZE; i++)
+            for (var i = 0; i <= MAP_SIZE; i++)
             {
-                graph.DrawLine(pen, 30 + i * CELL_SIZE, 30, 30 + i * CELL_SIZE, MAP_SIZE * CELL_SIZE + 30);
-                graph.DrawLine(pen, 30, 30 + i * CELL_SIZE, MAP_SIZE * CELL_SIZE + 30, 30 + i * CELL_SIZE);
+                graph.DrawLine(pen, 30 + i*CELL_SIZE, 30, 30 + i*CELL_SIZE, MAP_SIZE*CELL_SIZE + 30);
+                graph.DrawLine(pen, 30, 30 + i*CELL_SIZE, MAP_SIZE*CELL_SIZE + 30, 30 + i*CELL_SIZE);
             }
 
             if (DrawShip)
             {
-                int count = ShipTypeExtention.GetSize(ShipDrawType);
-                SolidBrush brush = ShipTypeExtention.GetColor(ShipDrawType);
+                var count = ShipDrawType.GetSize();
+                var brush = ShipDrawType.GetColor();
 
-                int tempX = drawX;
-                int tempY = drawY;
+                var tempX = drawX;
+                var tempY = drawY;
 
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     graph.FillRectangle(brush, tempX, tempY, CELL_SIZE, CELL_SIZE);
                     graph.DrawRectangle(pen, tempX, tempY, CELL_SIZE, CELL_SIZE);
@@ -118,9 +112,9 @@ namespace SeaBatlle
 
         public SolidBrush GetColor(int y)
         {
-            ShipType type = ShipTypeExtention.GetTypeOfShip(y);
+            var type = ShipTypeExtention.GetTypeOfShip(y);
 
-            int amount = __MapTemp.GetAmountForShipType(type);
+            var amount = __MapTemp.GetAmountForShipType(type);
 
             if (ShipDrawType == type && DrawShip)
                 amount--;
@@ -152,7 +146,7 @@ namespace SeaBatlle
 
         private void Build_KeyDown(object sender, KeyEventArgs e)
         {
-            char rotate = e.KeyData.ToString().ToLower()[0];
+            var rotate = e.KeyData.ToString().ToLower()[0];
             if (rotate == 'r')
             {
                 if (Rotate)
@@ -181,7 +175,7 @@ namespace SeaBatlle
 
         private bool CheckForEnableButtonNext()
         {
-            foreach (ShipType shipType in Enum.GetValues(typeof(ShipType)))
+            foreach (ShipType shipType in Enum.GetValues(typeof (ShipType)))
             {
                 if (__MapTemp.GetAmountForShipType(shipType) > 0)
                     return false;
@@ -201,56 +195,67 @@ namespace SeaBatlle
 
         private void Next_Click(object sender, EventArgs e)
         {
-            if (Login.BotEnable)
+            switch (Login.GameMode)
             {
-                VsBot bot = new VsBot(__MapTemp);
-
-                this.Hide();
-                bot.Show();
-            }
-
-            if (Login.PvPEnable)
-            {
-                if (__NextPlayer)
+                case Mode.VsBot:
                 {
-                    PvP_Game pvp = new PvP_Game(firstplayerfield, __MapTemp.FillCells());
+                    var bot = new VsBot(__MapTemp);
 
-                    this.Hide();
-                    pvp.Show();
+                    Hide();
+                    bot.Show();
+                    break;
                 }
-                if (!__NextPlayer)
+                case Mode.OnLan:
                 {
-                    firstplayerfield = __MapTemp.FillCells();
-                    __MapTemp = new Map(MAP_SIZE);
-                    __NextPlayer = true;
-                    Draw();
+                    var onlan = new OnLan(__MapTemp.FillCells());
+                    onlan.Show();
+                    Hide();
+                    break;
+                }
+                case Mode.TwoPlayes:
+                {
+                    if (__NextPlayer)
+                    {
+                        var pvp = new PvP_Game(firstplayerfield, __MapTemp.FillCells());
+
+                        Hide();
+                        pvp.Show();
+                    }
+                    if (!__NextPlayer)
+                    {
+                        firstplayerfield = __MapTemp.FillCells();
+                        __MapTemp = new Map(MAP_SIZE);
+                        __NextPlayer = true;
+                        Draw();
+                    }
+                    break;
                 }
             }
         }
 
         private bool OnMap(int x, int y)
         {
-            return x > 30 - CELL_SIZE / 2 && x < 330 - CELL_SIZE / 2 && y > 30 - CELL_SIZE / 2 && y < 330 - CELL_SIZE / 2;
+            return x > 30 - CELL_SIZE/2 && x < 330 - CELL_SIZE/2 && y > 30 - CELL_SIZE/2 && y < 330 - CELL_SIZE/2;
         }
 
         private void Picture_MouseDown(object sender, MouseEventArgs e)
         {
-            int j = 4;
+            var j = 4;
 
             int i;
             int k;
 
-            bool found = false;
+            var found = false;
             for (i = 0; i < 4; i++)
             {
                 for (k = 0; k < j; k++)
                 {
-                    int y = 40 + Convert.ToInt32(CELL_SIZE * i * 2.5);
-                    int x = 360 + k * CELL_SIZE;
+                    var y = 40 + Convert.ToInt32(CELL_SIZE*i*2.5);
+                    var x = 360 + k*CELL_SIZE;
 
                     if (e.X >= x && e.X <= x + CELL_SIZE && e.Y >= y && e.Y <= CELL_SIZE + y)
                     {
-                        dx = e.X - x + CELL_SIZE * k;
+                        dx = e.X - x + CELL_SIZE*k;
                         dy = e.Y - y;
                         found = true;
                         break;
@@ -285,8 +290,8 @@ namespace SeaBatlle
             {
                 if (e.X > 30 && e.X < 330 && e.Y > 30 && e.Y < 330)
                 {
-                    int x = (e.X - 30) / CELL_SIZE;
-                    int y = (e.Y - 30) / CELL_SIZE;
+                    var x = (e.X - 30)/CELL_SIZE;
+                    var y = (e.Y - 30)/CELL_SIZE;
 
                     __MapTemp.DeleteShip(x, y);
 
@@ -302,8 +307,8 @@ namespace SeaBatlle
             {
                 if (OnMap(drawX, drawY))
                 {
-                    int x = (drawX - 30 + CELL_SIZE / 2) / CELL_SIZE;
-                    int y = (drawY - 30 + CELL_SIZE / 2) / CELL_SIZE;
+                    var x = (drawX - 30 + CELL_SIZE/2)/CELL_SIZE;
+                    var y = (drawY - 30 + CELL_SIZE/2)/CELL_SIZE;
 
                     __MapTemp.TryPutShip(new Point(x, y), ShipDrawType, !Rotate);
                 }

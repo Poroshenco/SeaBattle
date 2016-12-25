@@ -1,37 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using SeaBattle.Lib;
 
 namespace SeaBatlle
 {
-    public enum CellType
-    {
-        None,
-        Ship,
-        Destroyed,
-        Missed
-    }
-
     public static class CellExtention
     {
         public static bool Shooted(this CellType type)
         {
             return type == CellType.Destroyed || type == CellType.Missed;
         }
-        
+
         public static bool IsKilled(this CellType[,] field)
         {
-            int count = 0;
-            bool found = false;
-            int MAP_SIZE = Login.MAP_SIZE;
+            var count = 0;
+            var found = false;
+            var MAP_SIZE = Login.MAP_SIZE;
 
-            for (int y = 0; y < MAP_SIZE; y++)
+            for (var y = 0; y < MAP_SIZE; y++)
             {
-                for (int x = 0; x < MAP_SIZE; x++)
+                for (var x = 0; x < MAP_SIZE; x++)
                 {
                     if (field[x, y] == CellType.Destroyed)
                     {
@@ -45,18 +32,18 @@ namespace SeaBatlle
 
             if (!found)
             {
-                for (int y = 0; y < MAP_SIZE; y++)
+                for (var y = 0; y < MAP_SIZE; y++)
                 {
-                    for (int x = 0; x < MAP_SIZE; x++)
+                    for (var x = 0; x < MAP_SIZE; x++)
                     {
                         if (field[x, y] == CellType.Destroyed)
                         {
-                            for (int dy = -1; dy < 2; dy++)
+                            for (var dy = -1; dy < 2; dy++)
                             {
-                                for (int dx = -1; dx < 2; dx++)
+                                for (var dx = -1; dx < 2; dx++)
                                 {
-                                    int _x = x + dx;
-                                    int _y = y + dy;
+                                    var _x = x + dx;
+                                    var _y = y + dy;
 
                                     if (_x < 0 || _x > MAP_SIZE - 1 || _y < 0 || _y > MAP_SIZE - 1)
                                         continue;
@@ -75,7 +62,8 @@ namespace SeaBatlle
             return false; // Если кораблик не убили, то возвращаем false
         }
 
-        private static bool IsKilled_FindShip(int x, int y, CellType[,] field, int MAP_SIZE) // Проверяем каждую клетку, если вокруг неё есть кораблик, возращаем true
+        private static bool IsKilled_FindShip(int x, int y, CellType[,] field, int MAP_SIZE)
+            // Проверяем каждую клетку, если вокруг неё есть кораблик, возращаем true
         {
             if (x > 0)
                 if (field[x - 1, y] == CellType.Ship)
@@ -120,6 +108,5 @@ namespace SeaBatlle
                     return type;
             }
         }
-
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace SeaBatlle
 {
+    public enum Mode
+    {
+        OnLan,
+        VsBot,
+        TwoPlayes
+    }
+
     public partial class Login : Form
     {
         public static int MAP_SIZE;
@@ -20,15 +19,13 @@ namespace SeaBatlle
         public static int Cruisers;
         public static int Esmineces;
 
-        public static bool BotEnable;
-        public static bool OnLanEnable;
-        public static bool PvPEnable;
+        public static Mode GameMode;
 
         public Login()
         {
             InitializeComponent();
-            
-            StreamReader sr = new StreamReader("Settings.txt");
+
+            var sr = new StreamReader("Settings.txt");
 
             MAP_SIZE = int.Parse(sr.ReadLine());
             Linkors = int.Parse(sr.ReadLine());
@@ -38,50 +35,50 @@ namespace SeaBatlle
 
             sr.Close();
         }
-        
+
         private void VsBot_Click(object sender, EventArgs e)
         {
-            BotEnable = true;
-            PvPEnable = false;
-            OnLanEnable = false;
+            GameMode = Mode.VsBot;
 
-            Build build = new Build();
+            var build = new Build();
             build.Show();
 
             SaveSettings();
-            this.Hide();
+            Hide();
         }
 
         private void PVP_Click(object sender, EventArgs e)
         {
-            BotEnable = false;
-            PvPEnable = true;
-            OnLanEnable = false;
+            GameMode = Mode.TwoPlayes;
 
-            PvP_EnterNicknames pvp = new PvP_EnterNicknames();
+            var pvp = new PvP_EnterNicknames();
             pvp.Show();
-            this.Hide();
+
+            SaveSettings();
+            Hide();
         }
 
         private void Lan_Click(object sender, EventArgs e)
         {
-            BotEnable = false;
-            PvPEnable = false;
-            OnLanEnable = true;
-            
+            GameMode = Mode.OnLan;
 
+            var onlan_login = new OnLan_Login();
+            onlan_login.Show();
+
+            SaveSettings();
+            Hide();
         }
 
         private void MapSettings_Click(object sender, EventArgs e)
         {
-            Map_Settings ms = new Map_Settings();
+            var ms = new Map_Settings();
 
             ms.Show();
         }
 
         private void SaveSettings()
         {
-            StreamWriter sw = new StreamWriter("Settings.txt");
+            var sw = new StreamWriter("Settings.txt");
             sw.WriteLine(MAP_SIZE);
             sw.WriteLine(Linkors);
             sw.WriteLine(AirCrafters);

@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SeaBatlle
@@ -28,9 +20,9 @@ namespace SeaBatlle
                 FirstPlayerNickname = FirstNickname.Text;
                 SecondPlayerNickname = SecondNickname.Text;
 
-                Build build = new Build();
+                var build = new Build();
                 build.Show();
-                this.Hide();
+                Hide();
             }
         }
     }
